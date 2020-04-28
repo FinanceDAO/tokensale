@@ -18,6 +18,7 @@ import styled from 'styled-components'
 function App() {
   const { api, appState, path, requestPath } = useAragonApi()
   const { tokenManager, isSyncing } = appState
+  const [tokenManager, setTokenManager] = useState('')
 
   const pathParts = path.match(/^\/tab\/([0-9]+)/)
   const pageIndex = Array.isArray(pathParts)
@@ -28,7 +29,7 @@ function App() {
     <Main>
       {isSyncing && <SyncIndicator />}
       <Header
-        primary="Counter"
+        primary="Token Sale"
         secondary={
           <Text
             css={`
@@ -55,12 +56,18 @@ function App() {
         `}
       >
         Count: {count}
+        <TextInput
+          value={value}
+          onChange={event => {
+            setValue(event.target.value)
+          }}
+        />  
         <Buttons>
           <Button
             display="icon"
             icon={<IconMinus />}
-            label="Decrement"
-            onClick={() => api.decrement(1).toPromise()}
+            label="Add Address"
+            onClick={() => api.setTokenManager(value).toPromise()}
           />
           <Button
             display="icon"
