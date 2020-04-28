@@ -1,9 +1,5 @@
 import React, { useState } from 'react'
-import { Main, Tag, Header, Button, IconPlus, SidePanel, Split, Card, Box } from '@aragon/ui'
-
-import TokenHoldersView from './TokenHoldersView'
-import TokenInfoBox from './TokenInfoBox'
-
+import { Main, Tag, Header, Button, IconPlus, SidePanel} from '@aragon/ui'
 
 // Some demo data
 const token = {
