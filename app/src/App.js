@@ -18,7 +18,9 @@ import styled from 'styled-components'
 function App() {
   const { api, appState, path, requestPath } = useAragonApi()
   const { tokenManager, isSyncing } = appState
-  const [tokenManager, setTokenManager] = useState('')
+  const [tm, setTM] = useState('')
+  const [v, setVault] = useState('')
+
 
   const pathParts = path.match(/^\/tab\/([0-9]+)/)
   const pageIndex = Array.isArray(pathParts)
@@ -57,9 +59,9 @@ function App() {
       >
         Count: {count}
         <TextInput
-          value={value}
+          value={tm}
           onChange={event => {
-            setValue(event.target.value)
+            setTM(event.target.value)
           }}
         />  
         <Buttons>
@@ -67,13 +69,19 @@ function App() {
             display="icon"
             icon={<IconMinus />}
             label="Add Address"
-            onClick={() => api.setTokenManager(value).toPromise()}
+            onClick={() => api.setTokenManager(tm).toPromise()}
           />
+        <TextInput
+          value={v}
+          onChange={event => {
+            setVault(event.target.value)
+          }}
+        />  
           <Button
             display="icon"
             icon={<IconPlus />}
-            label="Increment"
-            onClick={() => api.increment(1).toPromise()}
+            label="Set Vault"
+            onClick={() => api.setV(1).toPromise()}
             css={`
               margin-left: ${2 * GU}px;
             `}

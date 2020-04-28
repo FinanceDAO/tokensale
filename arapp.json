@@ -1,13 +1,13 @@
 {
   "roles": [
     {
-      "name": "Increment the counter",
-      "id": "INCREMENT_ROLE",
+      "name": "Set Vault role",
+      "id": "SET_VAULT_ROLE",
       "params": []
     },
     {
-      "name": "Decrement the counter",
-      "id": "DECREMENT_ROLE",
+      "name": "Set Token Manager Role",
+      "id": "SET_TOKEN_MANAGER_ROLE",
       "params": []
     }
   ],

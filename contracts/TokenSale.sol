@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/apps-vault/contracts/Vault.sol";
 import "@aragon/apps-token-manager/contracts/TokenManager.sol";
+import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 
 contract TokenSale is AragonApp {
 
