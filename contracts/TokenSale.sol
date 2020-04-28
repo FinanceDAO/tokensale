@@ -12,6 +12,7 @@ contract TokenSale is AragonApp {
 
     TokenManager public tokenManager;
     Vault public vault;
+    uint256 rate;
 
     event SetTokenManager(address tokenManager);
     event SetVault(Vault vault);
@@ -23,6 +24,7 @@ contract TokenSale is AragonApp {
     function initialize(Vault _vault, TokenManager _tokenManager) external onlyInit {
         tokenManager = _tokenManager;
         vault = _vault;
+        rate = 2;
 
         initialized();
     }

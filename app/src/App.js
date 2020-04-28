@@ -1,102 +1,54 @@
-import React from 'react'
-import { useAragonApi } from '@aragon/api-react'
-import {
-  Box,
-  Button,
-  GU,
-  Header,
-  IconMinus,
-  IconPlus,
-  Main,
-  SyncIndicator,
-  Tabs,
-  Text,
-  textStyle,
-} from '@aragon/ui'
-import styled from 'styled-components'
+import React, { useState } from 'react'
+import { Main, Tag, Header, Button, IconPlus, SidePanel, Split, Card, Box } from '@aragon/ui'
+
+import TokenHoldersView from './TokenHoldersView'
+import TokenInfoBox from './TokenInfoBox'
+
+
+// Some demo data
+const token = {
+  name: 'My Organization Token',
+  symbol: 'MOT',
+  address: '0x…',
+  transferable: true,
+  supply: 8,
+  holders: [
+    ['0xcafe…', 3],
+    ['0xbeef…', 2],
+    ['0xfeed…', 1],
+    ['0xface…', 1],
+    ['0xbead…', 1],
+  ],
+}
 
 function App() {
-  const { api, appState, path, requestPath } = useAragonApi()
-  const { tokenManager, isSyncing } = appState
-  const [tm, setTM] = useState('')
-  const [v, setVault] = useState('')
-
-
-  const pathParts = path.match(/^\/tab\/([0-9]+)/)
-  const pageIndex = Array.isArray(pathParts)
-    ? parseInt(pathParts[1], 10) - 1
-    : 0
-
+  const [sidePanelOpened, setSidePanelOpened] = useState(false)
   return (
     <Main>
-      {isSyncing && <SyncIndicator />}
       <Header
-        primary="Token Sale"
+        primary={
+          <>
+            Token Sale
+            <Tag mode="identifier">TKN</Tag>
+          </>
+        }
         secondary={
-          <Text
-            css={`
-              ${textStyle('title2')}
-            `}
-          >
-            {tokenManager}
-          </Text>
+          <Button
+            mode="strong"
+            label="Buy Tokens"
+            icon={<IconPlus />}
+            onClick={() => setSidePanelOpened(true)}
+          />
         }
       />
-      <Tabs
-        items={['Tab 1', 'Tab 2']}
-        selected={pageIndex}
-        onChange={index => requestPath(`/tab/${index + 1}`)}
-      />
-      <Box
-        css={`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          height: ${50 * GU}px;
-          ${textStyle('title3')};
-        `}
+      <SidePanel
+        title="Buy Tokens"
+        opened={sidePanelOpened}
+        onClose={() => setSidePanelOpened(false)}
       >
-        Count: {count}
-        <TextInput
-          value={tm}
-          onChange={event => {
-            setTM(event.target.value)
-          }}
-        />  
-        <Buttons>
-          <Button
-            display="icon"
-            icon={<IconMinus />}
-            label="Add Address"
-            onClick={() => api.setTokenManager(tm).toPromise()}
-          />
-        <TextInput
-          value={v}
-          onChange={event => {
-            setVault(event.target.value)
-          }}
-        />  
-          <Button
-            display="icon"
-            icon={<IconPlus />}
-            label="Set Vault"
-            onClick={() => api.setV(1).toPromise()}
-            css={`
-              margin-left: ${2 * GU}px;
-            `}
-          />
-        </Buttons>
-      </Box>
+        {/* SidePanel content goes here */}
+      </SidePanel>
     </Main>
   )
 }
-
-const Buttons = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-gap: 40px;
-  margin-top: 20px;
-`
-
 export default App
