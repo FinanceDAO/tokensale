@@ -2,6 +2,7 @@ let vault
 let tokenManager
 let token
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const TOKEN_CONST = 1000000000000000000
 
 module.exports = {
   postDao: async function({ _experimentalAppInstaller, log }, bre) {
@@ -39,7 +40,7 @@ module.exports = {
   },
 
   getInitParams: async function({}, bre) {
-    return [vault.address, tokenManager.address]
+    return [vault.address, tokenManager.address, 3, 1234567890123456, 600]
   },
 }
 
@@ -51,9 +52,9 @@ async function _deployMinimeToken(bre) {
     factory.address,
     ZERO_ADDRESS,
     0,
-    'MiniMe Test Token',
+    'Test Token',
     18,
-    'MMT',
+    'TKN',
     true
   )
   return token
