@@ -12,14 +12,15 @@ contract TokenSale is AragonApp {
     string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
     string private constant ERROR_ZERO_ADDRESS = "BENEFICIARY_IS_THE_ZERO_ADDRESS";
     string private constant ERROR_ZERO_WEI = "WEI_AMOUNT_IS_ZERO";
+    string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
+    string private constant ERROR_SALE_ENDED = "ERROR_SALE_ENDED";
 
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
 
     // State
-    // token units per wei. If using 1 with 3 decimals called TKN. 1 wei == 1 unit, or 0.001 TKN.
-    uint256 public rate;
+    uint256 public rate; // token units per wei.
     uint256 public tokensSold;
     uint256 public weiRaised;
     uint256 public cap;
@@ -59,8 +60,10 @@ contract TokenSale is AragonApp {
     * @notice Buys tokens and sends to `beneficiary`.
     * @param beneficiary The address to mint to
     */
-    function buyTokens(address beneficiary) public stillOpen payable {
+    function buyTokens(address beneficiary) public payable {
         uint256 weiAmount = msg.value;
+        require(closeTime < now, ERROR_SALE_ENDED);
+        require(weiAmount.add(weiRaised) < cap, ERROR_EXCEEDED_HARDCAP);
         require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
         require(weiAmount != 0, ERROR_ZERO_WEI);
 
@@ -87,7 +90,7 @@ contract TokenSale is AragonApp {
     * @param _vault The new vault address
     */
     function setVault(address _vault) external auth(SET_VAULT_ROLE) {
-        require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
+        require(isContract(_vault), ERROR_ADDRESS_NOT_CONTRACT);
 
         vault = Vault(_vault);
         emit SetVault(_vault);
@@ -98,10 +101,5 @@ contract TokenSale is AragonApp {
     */
     function getToken() public view returns (address) {
         return tokenManager.token();
-    }
-
-    modifier stillOpen() {
-        require(closeTime < now);
-        _;
     }
 }
