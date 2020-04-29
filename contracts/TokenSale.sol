@@ -20,8 +20,7 @@ contract TokenSale is AragonApp {
     bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
 
     // State
-    uint256 public rate; // token units per wei.
-    uint256 public tokensSold;
+    uint256 public rate; // token units per wei
     uint256 public weiRaised;
     uint256 public cap;
     uint256 public closeTime;
@@ -48,7 +47,6 @@ contract TokenSale is AragonApp {
         rate = _rate;
         cap = _cap;
         weiRaised = 0;
-        tokensSold = 0;
         closeTime = now +_time;
 
         initialized();
