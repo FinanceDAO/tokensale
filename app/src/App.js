@@ -1,8 +1,11 @@
 // App.js
 import React, { useState }from 'react'
+import { useAragonApi } from '@aragon/api-react'
 import { Main, Header, Button, IconPlus, Tag, TextInput } from '@aragon/ui'
 
 function App() {
+  const { api, appState } = useAragonApi()
+  const { tokenManager, isSyncing } = appState
   const [amount, setAmount] = useState('')
   return (
     <Main>
