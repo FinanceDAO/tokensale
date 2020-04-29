@@ -26,10 +26,8 @@ contract TokenSale is AragonApp {
     uint256 public cap;
     uint256 public closeTime;
     mapping (address => uint256) public tokensPurchaced;
-
     TokenManager public tokenManager;
     Vault public vault;
-
 
     // Events
     event SetTokenManager(address tokenManager);
