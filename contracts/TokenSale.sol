@@ -60,7 +60,7 @@ contract TokenSale is AragonApp {
     * @notice Buys tokens and snds to beneficiary.
     * @param beneficiary The new to mint to
     */
-    function buyTokens(address beneficiary) public nonReentrant payable {
+    function buyTokens(address beneficiary) public stillOpen payable {
         uint256 weiAmount = msg.value;
         require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
         require(weiAmount != 0, ERROR_ZERO_WEI);
@@ -97,5 +97,10 @@ contract TokenSale is AragonApp {
     */
     function getToken() public view returns (address) {
         return tokenManager.token();
+    }
+
+    modifier stillOpen() {
+        require(closeTime < now);
+        _;
     }
 }
