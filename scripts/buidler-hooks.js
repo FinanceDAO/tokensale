@@ -40,7 +40,7 @@ module.exports = {
   },
 
   getInitParams: async function({}, bre) {
-    return [vault.address, tokenManager.address, 3, 1234567890123456]
+    return [vault.address, tokenManager.address, 3, 1234567890123456, 600]
   },
 }
 

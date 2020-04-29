@@ -20,6 +20,8 @@ contract TokenSale is AragonApp {
     uint256 public tokensSold;
     uint256 public weiRaised;
     uint256 public cap;
+    uint256 public closeTime;
+    mapping (address => uint256) public tokensPurchaced;
 
     TokenManager public tokenManager;
     Vault public vault;
@@ -33,7 +35,7 @@ contract TokenSale is AragonApp {
     /**
     * @notice Initialize TokenSale contract
     */
-    function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap) external onlyInit {
+    function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap, uint256 _time) external onlyInit {
         tokenManager = _tokenManager;
         vault = _vault;
         rate = _rate;
