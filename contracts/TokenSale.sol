@@ -17,7 +17,6 @@ contract TokenSale is AragonApp {
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
 
-
     // State
     // token units per wei. If using 1 with 3 decimals called TKN. 1 wei == 1 unit, or 0.001 TKN.
     uint256 public rate;
@@ -57,8 +56,8 @@ contract TokenSale is AragonApp {
     }
 
     /**
-    * @notice Buys tokens and snds to beneficiary.
-    * @param beneficiary The new to mint to
+    * @notice Buys tokens and sends to `beneficiary`.
+    * @param beneficiary The address to mint to
     */
     function buyTokens(address beneficiary) public stillOpen payable {
         uint256 weiAmount = msg.value;
