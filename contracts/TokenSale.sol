@@ -88,6 +88,8 @@ contract TokenSale is AragonApp {
     * @param _vault The new vault address
     */
     function setVault(address _vault) external auth(SET_VAULT_ROLE) {
+        require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
+
         vault = Vault(_vault);
         emit SetVault(_vault);
     }
