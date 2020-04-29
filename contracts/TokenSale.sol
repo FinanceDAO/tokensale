@@ -8,68 +8,55 @@ import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 contract TokenSale is AragonApp {
     using SafeMath for uint256;
 
-    // ---------------------------------- Roles --------------------------------------------/
+    // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
 
 
-    // ---------------------------------- State --------------------------------------------/
-    TokenManager public tokenManager;
-    Vault public vault;
-
+    // State
     // How many token units a buyer gets per wei.
     // So, if you are using a rate of 1 with 3 decimals called TKN. 1 wei will give you 1 unit, or 0.001 TOK.
     uint256 public rate;
-
-    // Maximum Tokens that can be sold in wei
+    uint256 public tokensSold;
+    uint256 public weiRaised;
     uint256 public cap;
 
-    // Actual tokens sold in wei
-    uint256 public tokensSold;
-
-    // Wei Raised
-    uint256 public weiRaised;
+    TokenManager public tokenManager;
+    Vault public vault;
 
 
-    // --------------------------------- Events --------------------------------------------/
+    // Events
     event SetTokenManager(address tokenManager);
     event SetVault(address vault);
     event TokensPurchased(address purchaser, address beneficiary, uint256 value, uint256 amount);
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
     * @notice Initialize TokenSale contract
     */
-    function initialize(Vault _vault, TokenManager _tokenManager) external onlyInit {
+    function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap) external onlyInit {
         tokenManager = _tokenManager;
         vault = _vault;
-        rate = 2;
-        cap = 10000000000000000000000;
+        rate = _rate;
+        cap = _cap;
         weiRaised = 0;
         tokensSold = 0;
 
         initialized();
     }
 
+    /**
+    * @notice Buys tokens and snds to beneficiary.
+    * @param beneficiary The new to mint to
+    */
     function buyTokens(address beneficiary) public nonReentrant payable {
         uint256 weiAmount = msg.value;
         require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
         require(weiAmount != 0, "Crowdsale: weiAmount is 0");
 
-        // calculate token amount to be created
         uint256 tokens = weiAmount.mul(rate);
-
-        // update state
-        weiRaised = weiRaised.add(weiAmount);
-
-        // mint tokens
         tokenManager.mint(beneficiary, tokens);
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
-
-        // send wei to vault
-        vault.deposit.value(weiAmount)(ETH, weiAmount);
-
+        vault.deposit.value(weiAmount);
     }
 
     /**
@@ -82,7 +69,6 @@ contract TokenSale is AragonApp {
         tokenManager = TokenManager(_tokenManager);
         emit SetTokenManager(_tokenManager);
     }
-
 
     /**
     * @notice Set the Vault to `_vault`.
@@ -99,12 +85,4 @@ contract TokenSale is AragonApp {
     function getToken() public returns (address) {
         return tokenManager.token();
     }
-
-    function mint(uint256 _amount) external payable {
-        tokenManager.mint(msg.sender, 100000000000000000);
-    }
-
-    // --------------------------------------------------- private --------------------------------
-
-
 }
