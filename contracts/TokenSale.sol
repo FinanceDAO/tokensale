@@ -19,8 +19,7 @@ contract TokenSale is AragonApp {
 
 
     // State
-    // How many token units a buyer gets per wei.
-    // So, if you are using a rate of 1 with 3 decimals called TKN. 1 wei will give you 1 unit, or 0.001 TOK.
+    // token units per wei. If using 1 with 3 decimals called TKN. 1 wei == 1 unit, or 0.001 TKN.
     uint256 public rate;
     uint256 public tokensSold;
     uint256 public weiRaised;
@@ -39,6 +38,11 @@ contract TokenSale is AragonApp {
 
     /**
     * @notice Initialize TokenSale contract
+    * @param _vault the vault
+    * @param _tokenManager the tokenManager
+    * @param _rate the rate
+    * @param _cap the cap
+    * @param _time the length of time in seconds sale lasts
     */
     function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap, uint256 _time) external onlyInit {
         tokenManager = _tokenManager;
