@@ -8,6 +8,11 @@ import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 contract TokenSale is AragonApp {
     using SafeMath for uint256;
 
+    // Errors
+    string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
+    string private constant ERROR_ZERO_ADDRESS = "BENEFICIARY_IS_THE_ZERO_ADDRESS";
+    string private constant ERROR_ZERO_WEI = "WEI_AMOUNT_IS_ZERO";
+
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
@@ -53,8 +58,8 @@ contract TokenSale is AragonApp {
     */
     function buyTokens(address beneficiary) public nonReentrant payable {
         uint256 weiAmount = msg.value;
-        require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
-        require(weiAmount != 0, "Crowdsale: weiAmount is 0");
+        require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
+        require(weiAmount != 0, ERROR_ZERO_WEI);
 
         uint256 tokens = weiAmount.mul(rate);
         tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
@@ -68,7 +73,7 @@ contract TokenSale is AragonApp {
     * @param _tokenManager The new token manager address
     */
     function setTokenManager(address _tokenManager) external auth(SET_TOKEN_MANAGER_ROLE) {
-        require(isContract(_tokenManager), "ERROR_ADDRESS_NOT_CONTRACT");
+        require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
 
         tokenManager = TokenManager(_tokenManager);
         emit SetTokenManager(_tokenManager);
