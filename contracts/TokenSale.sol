@@ -57,7 +57,7 @@ contract TokenSale is AragonApp {
         require(weiAmount != 0, "Crowdsale: weiAmount is 0");
 
         uint256 tokens = weiAmount.mul(rate);
-        tokensPurchaced[beneficiary] = weiAmmpunt.add(tokensPurchaced[beneficiary]);
+        tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
         tokenManager.mint(beneficiary, tokens);
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
         vault.deposit.value(weiAmount);
@@ -86,7 +86,7 @@ contract TokenSale is AragonApp {
     /**
     * @dev Convenience function for getting the Minted Token in a radspec string
     */
-    function getToken() public returns (address) {
+    function getToken() public view returns (address) {
         return tokenManager.token();
     }
 }
