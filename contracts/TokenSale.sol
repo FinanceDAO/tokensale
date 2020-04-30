@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
-import "@aragon/apps-vault/contracts/Vault.sol";
+import "@aragon/apps-agent/contracts/Agent.sol";
 import "@aragon/apps-token-manager/contracts/TokenManager.sol";
 import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 
@@ -26,24 +26,29 @@ contract TokenSale is AragonApp {
     uint256 public closeTime;
     mapping (address => uint256) public tokensPurchaced;
     TokenManager public tokenManager;
-    Vault public vault;
+    Agent public agent;
 
     // Events
     event SetTokenManager(address tokenManager);
-    event SetVault(address vault);
+    event SetAgent(address agent);
     event TokensPurchased(address purchaser, address beneficiary, uint256 value, uint256 amount);
 
     /**
     * @notice Initialize TokenSale contract
-    * @param _vault the vault
+    * @param _agent the vault
     * @param _tokenManager the tokenManager
     * @param _rate the rate
     * @param _cap the cap
     * @param _time the length of time in seconds sale lasts
     */
-    function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap, uint256 _time) external onlyInit {
+    function initialize(Agent _agent, 
+        TokenManager _tokenManager,
+        uint256 _rate,
+        uint256 _cap, 
+        uint256 _time
+    ) external onlyInit {
         tokenManager = _tokenManager;
-        vault = _vault;
+        agent = _agent;
         rate = _rate;
         cap = _cap;
         weiRaised = 0;
@@ -53,21 +58,28 @@ contract TokenSale is AragonApp {
     }
 
     /**
+    * @notice fallback function that sends the tokens to `msg.sender`
+    */
+    function() public payable {
+        buyTokens(msg.sender);
+    }
+
+    /**
     * @notice Buys tokens and sends to `beneficiary`.
     * @param beneficiary The address to mint to
     */
     function buyTokens(address beneficiary) public payable {
-        uint256 weiAmount = msg.value;
-        require(closeTime < now, ERROR_SALE_ENDED);
-        require(weiAmount.add(weiRaised) < cap, ERROR_EXCEEDED_HARDCAP);
-        require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
-        require(weiAmount != 0, ERROR_ZERO_WEI);
+          uint256 weiAmount = msg.value;
+//        require(closeTime < now, ERROR_SALE_ENDED);
+//        require(weiAmount.add(weiRaised) < cap, ERROR_EXCEEDED_HARDCAP);
+//        require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
+//        require(weiAmount != 0, ERROR_ZERO_WEI);
 
         uint256 tokens = weiAmount.mul(rate);
-        tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
-        tokenManager.mint(beneficiary, tokens);
+//        tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
+//        tokenManager.mint(beneficiary, tokens);
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
-        vault.deposit.value(weiAmount);
+//        agent.deposit.value(weiAmount);
     }
 
     /**
@@ -82,14 +94,14 @@ contract TokenSale is AragonApp {
     }
 
     /**
-    * @notice Set the Vault to `_vault`.
-    * @param _vault The new vault address
+    * @notice Set the Agent to `_agent`.
+    * @param _agent The new vault address
     */
-    function setVault(address _vault) external auth(SET_VAULT_ROLE) {
-        require(isContract(_vault), ERROR_ADDRESS_NOT_CONTRACT);
+    function setAgent(address _agent) external auth(SET_VAULT_ROLE) {
+        require(isContract(_agent), ERROR_ADDRESS_NOT_CONTRACT);
 
-        vault = Vault(_vault);
-        emit SetVault(_vault);
+        agent = Agent(_agent);
+        emit SetAgent(_agent);
     }
 
     /**
