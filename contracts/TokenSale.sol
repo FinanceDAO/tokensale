@@ -41,14 +41,14 @@ contract TokenSale is AragonApp {
     * @param _cap the cap
     * @param _time the length of time in seconds sale lasts
     */
-    function initialize(Agent _agent, 
-        TokenManager _tokenManager,
+    function initialize(address _agent, 
+        address _tokenManager,
         uint256 _rate,
         uint256 _cap, 
         uint256 _time
     ) external onlyInit {
-        tokenManager = _tokenManager;
-        agent = _agent;
+        tokenManager = TokenManager(_tokenManager);
+        agent = Agent(_agent);
         rate = _rate;
         cap = _cap;
         weiRaised = 0;
@@ -58,7 +58,7 @@ contract TokenSale is AragonApp {
     }
 
     /**
-    * @notice fallback function that sends the tokens to `msg.sender`
+ @notice fallback function that sends the tokens to `msg.sender`
     */
     function() public payable {
         buyTokens(msg.sender);
@@ -79,7 +79,7 @@ contract TokenSale is AragonApp {
 //        tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
 //        tokenManager.mint(beneficiary, tokens);
         emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
-//        agent.deposit.value(weiAmount);
+        agent.deposit.value(weiAmount);
     }
 
     /**
