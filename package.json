@@ -1,6 +1,6 @@
 {
   "name": "token-sale",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "placeholder-app-description",
   "scripts": {
     "postinstall": "yarn compile && yarn copy-artifacts && yarn build-app",
