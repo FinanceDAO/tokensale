@@ -1,4 +1,4 @@
-let vault
+let agent
 let tokenManager
 let token
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -14,10 +14,10 @@ module.exports = {
     accounts = await bre.web3.eth.getAccounts()
 
 
-    vault = await _experimentalAppInstaller('vault')
+    agent = await _experimentalAppInstaller('agent')
     tokenManager = await _experimentalAppInstaller('token-manager', { skipInitialize: true })
-    log(`> Vault app installed: ${vault.address}`)
-    log(`> Vault app installed: ${tokenManager.address}`)
+    log(`> Agent app installed: ${agent.address}`)
+    log(`> Agent app installed: ${tokenManager.address}`)
 
     // Deploy a minime token an generate tokens to root account
     const minime = await _deployMinimeToken(bre)
@@ -32,7 +32,7 @@ module.exports = {
   },
 
   preInit: async function({ proxy, log }, bre) {
-    await vault.createPermission('TRANSFER_ROLE', proxy.address)
+    await agent.createPermission('TRANSFER_ROLE', proxy.address)
     log(`> TRANSFER_ROLE assigned to ${proxy.address}`)
 
     await tokenManager.createPermission('MINT_ROLE', )
@@ -40,7 +40,7 @@ module.exports = {
   },
 
   getInitParams: async function({}, bre) {
-    return [tokenManager.address]
+    return [tokenManager.address, agent.address]
   },
 }
 
