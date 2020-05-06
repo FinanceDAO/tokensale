@@ -29,7 +29,6 @@ contract TokenSale is AragonApp {
     uint256 public rate; // fractional value in ETH
     uint256 public cap;
     uint256 public tokensSold;
-    uint256 TOKEN_CONST = 1000000000000000000;
     bool public isOpen;
 
 
@@ -38,12 +37,14 @@ contract TokenSale is AragonApp {
     event SetTokenManager(address tokenManager);
     event SetAgent(address agent);
     event SaleOpen(uint256 rate, uint256 cap);
+    event SaleClosed(uint256 tokensSold);
+
 
 
     function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
-        rate = TOKEN_CONST.mul(_rate);
+        rate = _rate;
         cap = _cap;
         tokensSold = 0;
         isOpen = true;
@@ -67,18 +68,28 @@ contract TokenSale is AragonApp {
 
     }
 
+
     function openSale(uint256 _rate, uint256 _cap) external auth(OPEN_SALE_ROLE) {
         require(isOpen == false, ERROR_SALE_OPEN);
 
-        rate = TOKEN_CONST.mul(_rate);
+        rate = _rate;
         cap = _cap;
         tokensSold = 0;
         isOpen = true;
         emit SaleOpen(rate, cap);
     }
 
+
+    function closeSale() external auth(CLOSE_SALE_ROLE) {
+        require(isOpen == true, ERROR_SALE_CLOSED);
+
+        isOpen = false;
+        emit SaleClosed(tokensSold);
+    }
+
     function setTokenManager(address _tokenManager) external auth(SET_TOKEN_MANAGER_ROLE) {
         require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
+        require(isOpen == false, ERROR_SALE_OPEN);
 
         tokenManager = TokenManager(_tokenManager);
         emit SetTokenManager(_tokenManager);
