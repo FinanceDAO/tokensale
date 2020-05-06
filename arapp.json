@@ -1,9 +1,13 @@
 {
   "roles": [
-
     {
-      "name": "Dummie Role",
-      "id": "DUMMIE_ROLE",
+      "name": "SET TOKEN MANAGER ROLE",
+      "id": "SET_TOKEN_MANAGER_ROLE",
+      "params": []
+    },
+    {
+      "name": "SET AGENT ROLE",
+      "id": "SET_AGENT_ROLE",
       "params": []
     }
   ],

@@ -6,7 +6,9 @@ import "@aragon/apps-agent/contracts/Agent.sol";
 
 contract TokenSale is AragonApp {
 
-    bytes32 public constant DUMMIE_ROLE = keccak256("DUMMIE_ROLE");
+    // Roles
+    bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
+    bytes32 constant public SET_AGENT_ROLE = keccak256("SET_AGENT_ROLE");
 
     TokenManager public tokenManager;
     Agent public agent;
