@@ -5,6 +5,7 @@ import "@aragon/apps-agent/contracts/Agent.sol";
 
 
 contract TokenSale is AragonApp {
+    using SafeMath for uint256;
 
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
@@ -13,6 +14,7 @@ contract TokenSale is AragonApp {
     // State
     TokenManager public tokenManager;
     Agent public agent;
+    uint256 public rate; // token units per wei
 
     // Events
     event TokensPurchased(address buyer, uint256 value, uint256 amount);
@@ -22,9 +24,11 @@ contract TokenSale is AragonApp {
     /**
      * @param _tokenManager TokenManager for minted token
      */
-    function initialize(TokenManager _tokenManager, Agent _agent) public onlyInit {
+    function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
+        rate = _rate;
+
 
         initialized();
     }
@@ -37,9 +41,10 @@ contract TokenSale is AragonApp {
      * @notice mint equal tokens for eth
      */
     function mint(address to, uint256 value) public payable {
-        tokenManager.mint(to, value);
+        uint256 amount = rate.mul(value);
+        tokenManager.mint(to, amount);
         agent.deposit.value(value)(ETH, value);
-        emit TokensPurchased(to, value, value);
+        emit TokensPurchased(to, value, amount);
 
     }
 }
