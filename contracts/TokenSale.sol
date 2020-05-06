@@ -10,6 +10,7 @@ contract TokenSale is AragonApp {
 
     // Errors
     string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
+    string private constant ERROR_SALE_ENDED = "ERROR_SALE_ENDED";
 
 
     // Roles
@@ -22,6 +23,7 @@ contract TokenSale is AragonApp {
     uint256 public rate; // token units per wei
     uint256 public cap;
     uint256 public tokensSold;
+    uint256 public saleEnd;
 
 
     // Events
@@ -32,12 +34,13 @@ contract TokenSale is AragonApp {
     /**
      * @param _tokenManager TokenManager for minted token
      */
-    function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
+    function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap, uint256 _time) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
         rate = _rate;
         cap = _cap;
         tokensSold = 0;
+        saleEnd = now + _time;
 
 
         initialized();
@@ -52,6 +55,8 @@ contract TokenSale is AragonApp {
      */
     function mint(address to, uint256 value) public payable {
         require(tokensSold.add(value) < cap, ERROR_EXCEEDED_HARDCAP);
+        require(saleEnd < now, ERROR_SALE_ENDED);
+
 
         uint256 amount = rate.mul(value);
         tokensSold = tokensSold.add(amount);

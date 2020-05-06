@@ -35,12 +35,13 @@ module.exports = {
     await agent.createPermission('TRANSFER_ROLE', proxy.address)
     log(`> TRANSFER_ROLE assigned to ${proxy.address}`)
 
-    await tokenManager.createPermission('MINT_ROLE', )
+    await tokenManager.createPermission('MINT_ROLE', proxy.address)
     log(`> MINT_ROLE assigned to ${proxy.address}`)
+
   },
 
   getInitParams: async function({}, bre) {
-    return [tokenManager.address, agent.address, 2, pct16(4000)]
+    return [tokenManager.address, agent.address, 2, pct16(4000), 50]
   },
 }
 
