@@ -1,5 +1,6 @@
 const { usePlugin } = require('@nomiclabs/buidler/config')
 const hooks = require('./scripts/buidler-hooks')
+const secrets = require('./secret.json')
 
 usePlugin('@aragon/buidler-aragon')
 
@@ -9,6 +10,12 @@ module.exports = {
   networks: {
     localhost: {
       url: 'http://localhost:8545',
+    },
+    rinkeby: {
+      url: 'https://rinkeby.infura.io/v3/e22eadb98be944d18e48ab4bec7ecf3f',
+      accounts: {
+        mnemonic: secrets.seed
+      }
     },
   },
   solc: {
