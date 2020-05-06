@@ -10,8 +10,13 @@ contract TokenSale is AragonApp {
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_AGENT_ROLE = keccak256("SET_AGENT_ROLE");
 
+    // State
     TokenManager public tokenManager;
     Agent public agent;
+
+    // Events
+    event TokensPurchased(address buyer, uint256 value, uint256 amount);
+
 
 
     /**
@@ -34,5 +39,7 @@ contract TokenSale is AragonApp {
     function mint(address to, uint256 value) public payable {
         tokenManager.mint(to, value);
         agent.deposit.value(value)(ETH, value);
+        emit TokensPurchased(to, value, value);
+
     }
 }
