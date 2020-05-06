@@ -1,6 +1,16 @@
 {
   "roles": [
     {
+      "name": "Open Sale Role",
+      "id": "OPEN_SALE_ROLE",
+      "params": []
+    },
+    {
+      "name": "Close Sale Role",
+      "id": "CLOSE_SALE_ROLE",
+      "params": []
+    },
+    {
       "name": "Set Token Manager Role",
       "id": "SET_TOKEN_MANAGER_ROLE",
       "params": []

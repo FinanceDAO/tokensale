@@ -11,11 +11,14 @@ contract TokenSale is AragonApp {
     // Errors
     string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
     string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
-
+    
 
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_AGENT_ROLE = keccak256("SET_AGENT_ROLE");
+    bytes32 constant public OPEN_SALE_ROLE = keccak256("OPEN_SALE_ROLE");
+    bytes32 constant public CLOSE_SALE_ROLE = keccak256("CLOSE_SALE_ROLE");
+    
 
 
     // State
@@ -25,7 +28,7 @@ contract TokenSale is AragonApp {
     uint256 public cap;
     uint256 public tokensSold;
     uint256 TOKEN_CONST = 1000000000000000000;
-
+    bool public isOpen;
 
 
     // Events
@@ -41,7 +44,7 @@ contract TokenSale is AragonApp {
         rate = TOKEN_CONST.mul(_rate);
         cap = _cap;
         tokensSold = 0;
-
+        isOpen = true;
 
         initialized();
     }
