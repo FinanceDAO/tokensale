@@ -1,12 +1,12 @@
 {
   "roles": [
     {
-      "name": "SET TOKEN MANAGER ROLE",
+      "name": "Set Token Manager Role",
       "id": "SET_TOKEN_MANAGER_ROLE",
       "params": []
     },
     {
-      "name": "SET AGENT ROLE",
+      "name": "Set Agent Role",
       "id": "SET_AGENT_ROLE",
       "params": []
     }
