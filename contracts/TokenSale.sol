@@ -21,9 +21,11 @@ contract TokenSale is AragonApp {
     // State
     TokenManager public tokenManager;
     Agent public agent;
-    uint256 public rate; // token units per wei
+    uint256 public rate; // fractional value in ETH
     uint256 public cap;
     uint256 public tokensSold;
+    uint256 TOKEN_CONST = 1000000000000000000;
+
 
 
     // Events
@@ -36,7 +38,7 @@ contract TokenSale is AragonApp {
     function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
-        rate = _rate;
+        rate = TOKEN_CONST.mul(_rate);
         cap = _cap;
         tokensSold = 0;
 
