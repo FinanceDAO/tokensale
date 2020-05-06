@@ -8,9 +8,12 @@ import "@aragon/apps-agent/contracts/Agent.sol";
 contract TokenSale is AragonApp {
     using SafeMath for uint256;
 
+
     // Errors
     string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
     string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
+    string private constant ERROR_SALE_CLOSED = "ERROR_SALE_CLOSED";
+    string private constant ERROR_SALE_OPEN = "ERROR_SALE_OPEN";
     
 
     // Roles
@@ -19,7 +22,6 @@ contract TokenSale is AragonApp {
     bytes32 constant public OPEN_SALE_ROLE = keccak256("OPEN_SALE_ROLE");
     bytes32 constant public CLOSE_SALE_ROLE = keccak256("CLOSE_SALE_ROLE");
     
-
 
     // State
     TokenManager public tokenManager;
@@ -35,7 +37,7 @@ contract TokenSale is AragonApp {
     event TokensPurchased(address buyer, uint256 value, uint256 amount);
     event SetTokenManager(address tokenManager);
     event SetAgent(address agent);
-
+    event SaleOpen(uint256 rate, uint256 cap);
 
 
     function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
@@ -55,6 +57,7 @@ contract TokenSale is AragonApp {
 
     function mint(address to, uint256 value) public payable {
         require(tokensSold.add(value) < cap, ERROR_EXCEEDED_HARDCAP);
+        require(isOpen == true, ERROR_SALE_CLOSED);
 
         uint256 amount = rate.mul(value);
         tokensSold = tokensSold.add(amount);
@@ -62,6 +65,16 @@ contract TokenSale is AragonApp {
         agent.deposit.value(value)(ETH, value);
         emit TokensPurchased(to, value, amount);
 
+    }
+
+    function openSale(uint256 _rate, uint256 _cap) external auth(OPEN_SALE_ROLE) {
+        require(isOpen == false, ERROR_SALE_OPEN);
+
+        rate = TOKEN_CONST.mul(_rate);
+        cap = _cap;
+        tokensSold = 0;
+        isOpen = true;
+        emit SaleOpen(rate, cap);
     }
 
     function setTokenManager(address _tokenManager) external auth(SET_TOKEN_MANAGER_ROLE) {
