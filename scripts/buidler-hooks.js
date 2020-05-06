@@ -35,12 +35,12 @@ module.exports = {
     await vault.createPermission('TRANSFER_ROLE', proxy.address)
     log(`> TRANSFER_ROLE assigned to ${proxy.address}`)
 
-    await tokenManager.createPermission('MINT_ROLE', proxy.address)
+    await tokenManager.createPermission('MINT_ROLE', )
     log(`> MINT_ROLE assigned to ${proxy.address}`)
   },
 
   getInitParams: async function({}, bre) {
-    return [vault.address, tokenManager.address, 3, 1234567890123456, 600]
+    return [tokenManager.address]
   },
 }
 

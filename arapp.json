@@ -1,13 +1,9 @@
 {
   "roles": [
+
     {
-      "name": "Set Vault role",
-      "id": "SET_VAULT_ROLE",
-      "params": []
-    },
-    {
-      "name": "Set Token Manager Role",
-      "id": "SET_TOKEN_MANAGER_ROLE",
+      "name": "Dummie Role",
+      "id": "DUMMIE_ROLE",
       "params": []
     }
   ],
