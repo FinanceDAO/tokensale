@@ -3,12 +3,20 @@ const hooks = require('./scripts/buidler-hooks')
 
 usePlugin('@aragon/buidler-aragon')
 
+const secret = require('./secret.json')
+
 module.exports = {
   // Default Buidler configurations. Read more about it at https://buidler.dev/config/
   defaultNetwork: 'localhost',
   networks: {
     localhost: {
       url: 'http://localhost:8545',
+    },
+    rinkeby: {
+        url: 'https://rinkeby.infura.io/v3/e22eadb98be944d18e48ab4bec7ecf3f',
+        accounts: {
+        mnemonic: secret.seed,
+      },
     },
   },
   solc: {

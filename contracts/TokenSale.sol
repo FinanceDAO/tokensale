@@ -10,11 +10,13 @@ contract TokenSale is AragonApp {
 
     // Errors
     string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
+    string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
 
 
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
     bytes32 constant public SET_AGENT_ROLE = keccak256("SET_AGENT_ROLE");
+
 
     // State
     TokenManager public tokenManager;
@@ -26,12 +28,11 @@ contract TokenSale is AragonApp {
 
     // Events
     event TokensPurchased(address buyer, uint256 value, uint256 amount);
+    event SetTokenManager(address tokenManager);
+    event SetAgent(address agent);
 
 
 
-    /**
-     * @param _tokenManager TokenManager for minted token
-     */
     function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
@@ -47,9 +48,6 @@ contract TokenSale is AragonApp {
         mint(msg.sender, msg.value);
     }
 
-    /**
-     * @notice mint equal tokens for eth
-     */
     function mint(address to, uint256 value) public payable {
         require(tokensSold.add(value) < cap, ERROR_EXCEEDED_HARDCAP);
 
@@ -59,5 +57,19 @@ contract TokenSale is AragonApp {
         agent.deposit.value(value)(ETH, value);
         emit TokensPurchased(to, value, amount);
 
+    }
+
+    function setTokenManager(address _tokenManager) external auth(SET_TOKEN_MANAGER_ROLE) {
+        require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
+
+        tokenManager = TokenManager(_tokenManager);
+        emit SetTokenManager(_tokenManager);
+    }
+
+    function setAgent(address _agent) external auth(SET_AGENT_ROLE) {
+        require(isContract(_agent), ERROR_ADDRESS_NOT_CONTRACT);
+
+        agent = Agent(_agent);
+        emit SetAgent(_agent);
     }
 }
