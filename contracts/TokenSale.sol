@@ -33,21 +33,19 @@ contract TokenSale is AragonApp {
 
 
     // Events
-    event TokensPurchased(address buyer, uint256 value, uint256 amount);
-    event SetTokenManager(address tokenManager);
-    event SetAgent(address agent);
+    event TokensPurchased(address indexed buyer, uint256 value, uint256 amount);
+    event SetTokenManager(address indexed tokenManager);
+    event SetAgent(address indexed agent);
     event SaleOpen(uint256 rate, uint256 cap);
     event SaleClosed(uint256 tokensSold);
 
 
 
-    function initialize(TokenManager _tokenManager, Agent _agent, uint256 _rate, uint256 _cap) public onlyInit {
+    function initialize(TokenManager _tokenManager, Agent _agent) public onlyInit {
         tokenManager = _tokenManager;
         agent = _agent;
-        rate = _rate;
-        cap = _cap;
         tokensSold = 0;
-        isOpen = true;
+        isOpen = false;
 
         initialized();
     }
