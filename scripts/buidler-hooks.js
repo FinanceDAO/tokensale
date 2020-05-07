@@ -40,7 +40,7 @@ module.exports = {
     },
 
     getInitParams: async function ({}, bre) {
-        return [tokenManager.address, agent.address, 2, pct16(5000)]
+        return [tokenManager.address, agent.address]
     },
 }
 
