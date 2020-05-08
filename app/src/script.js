@@ -14,8 +14,8 @@ app.store(
       switch (event) {
         case 'Increment':
           return { ...nextState, count: await getValue() }
-        case 'SetTokenManager':
-          return { ...nextState, tokenManager: await getTokenManager()}
+        case 'Decrement':
+          return { ...nextState, count: await getValue() }
         case events.SYNC_STATUS_SYNCING:
           return { ...nextState, isSyncing: true }
         case events.SYNC_STATUS_SYNCED:
@@ -50,9 +50,3 @@ function initializeState() {
 async function getValue() {
   return parseInt(await app.call('value').toPromise(), 10)
 }
-
-async function getTokenManager() {
-  return await app.call('tokenManager').toPromise()
-}
-
-
