@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Fixed rate Token Sale app for Aragon DAOs",
   "scripts": {
+    "state": "node ./scripts/contractState.js",
     "postinstall": "yarn compile && yarn copy-artifacts && yarn build-app",
     "copy-artifacts": "cp -R node_modules/@aragon/abis/os/artifacts/. artifacts/.",
     "build-app": "cd app && yarn install && cd ..",
@@ -17,7 +18,9 @@
     "@aragon/abis": "^1.1.0",
     "@aragon/apps-shared-migrations": "^1.0.0",
     "@aragon/apps-token-manager": "^2.1.0",
-    "@aragon/apps-agent": "^2.1.0"
+    "@aragon/apps-agent": "^2.1.0",
+    "bignumber.js": "^9.0.0",
+    "ethers": "^4.0.47"
   },
   "devDependencies": {
     "@aragon/buidler-aragon": "^0.2.2",
