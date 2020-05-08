@@ -1,9 +1,9 @@
 {
-  "name": "token-sale",
-  "author": "Placeholder-author",
-  "description": "An application for Aragon",
-  "details_url": "/meta/details.md",
-  "source_url": "https://<placeholder-repository-url>",
+  "name": "TokenSale",
+  "author": "FinanceDAO",
+  "description": "Fixed rate Token Sale app for Aragon DAOs",
+  "details_url": "https://github.com/FinanceDAO",
+  "source_url": "https://github.com/FinanceDAO",
   "icons": [
     {
       "src": "/meta/icon.svg",

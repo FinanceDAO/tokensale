@@ -1,101 +1,102 @@
 pragma solidity ^0.4.24;
 
-import "@aragon/os/contracts/apps/AragonApp.sol";
-import "@aragon/apps-vault/contracts/Vault.sol";
 import "@aragon/apps-token-manager/contracts/TokenManager.sol";
-import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
+import "@aragon/apps-agent/contracts/Agent.sol";
+
+
 
 contract TokenSale is AragonApp {
     using SafeMath for uint256;
 
+
     // Errors
-    string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
-    string private constant ERROR_ZERO_ADDRESS = "BENEFICIARY_IS_THE_ZERO_ADDRESS";
-    string private constant ERROR_ZERO_WEI = "WEI_AMOUNT_IS_ZERO";
     string private constant ERROR_EXCEEDED_HARDCAP = "ERROR_EXCEEDED_HARDCAP";
-    string private constant ERROR_SALE_ENDED = "ERROR_SALE_ENDED";
+    string private constant ERROR_ADDRESS_NOT_CONTRACT = "ERROR_ADDRESS_NOT_CONTRACT";
+    string private constant ERROR_SALE_CLOSED = "ERROR_SALE_CLOSED";
+    string private constant ERROR_SALE_OPEN = "ERROR_SALE_OPEN";
+    
 
     // Roles
     bytes32 constant public SET_TOKEN_MANAGER_ROLE = keccak256("SET_TOKEN_MANAGER_ROLE");
-    bytes32 constant public SET_VAULT_ROLE = keccak256("SET_VAULT_ROLE");
+    bytes32 constant public SET_AGENT_ROLE = keccak256("SET_AGENT_ROLE");
+    bytes32 constant public OPEN_SALE_ROLE = keccak256("OPEN_SALE_ROLE");
+    bytes32 constant public CLOSE_SALE_ROLE = keccak256("CLOSE_SALE_ROLE");
+    
 
     // State
-    uint256 public rate; // token units per wei
-    uint256 public weiRaised;
-    uint256 public cap;
-    uint256 public closeTime;
-    mapping (address => uint256) public tokensPurchaced;
     TokenManager public tokenManager;
-    Vault public vault;
+    Agent public agent;
+    uint256 public rate; // fractional value in ETH
+    uint256 public cap;
+    uint256 public tokensSold;
+    bool public isOpen;
+
 
     // Events
-    event SetTokenManager(address tokenManager);
-    event SetVault(address vault);
-    event TokensPurchased(address purchaser, address beneficiary, uint256 value, uint256 amount);
+    event TokensPurchased(address indexed buyer, uint256 value, uint256 amount);
+    event SetTokenManager(address indexed tokenManager);
+    event SetAgent(address indexed agent);
+    event SaleOpen(uint256 rate, uint256 cap);
+    event SaleClosed(uint256 tokensSold);
 
-    /**
-    * @notice Initialize TokenSale contract
-    * @param _vault the vault
-    * @param _tokenManager the tokenManager
-    * @param _rate the rate
-    * @param _cap the cap
-    * @param _time the length of time in seconds sale lasts
-    */
-    function initialize(Vault _vault, TokenManager _tokenManager, uint256 _rate, uint256 _cap, uint256 _time) external onlyInit {
+
+
+    function initialize(TokenManager _tokenManager, Agent _agent) public onlyInit {
         tokenManager = _tokenManager;
-        vault = _vault;
-        rate = _rate;
-        cap = _cap;
-        weiRaised = 0;
-        closeTime = now +_time;
+        agent = _agent;
+        tokensSold = 0;
+        isOpen = false;
 
         initialized();
     }
 
-    /**
-    * @notice Buys tokens and sends to `beneficiary`.
-    * @param beneficiary The address to mint to
-    */
-    function buyTokens(address beneficiary) public payable {
-        uint256 weiAmount = msg.value;
-        require(closeTime < now, ERROR_SALE_ENDED);
-        require(weiAmount.add(weiRaised) < cap, ERROR_EXCEEDED_HARDCAP);
-        require(beneficiary != address(0), ERROR_ZERO_ADDRESS);
-        require(weiAmount != 0, ERROR_ZERO_WEI);
-
-        uint256 tokens = weiAmount.mul(rate);
-        tokensPurchaced[beneficiary] = weiAmount.add(tokensPurchaced[beneficiary]);
-        tokenManager.mint(beneficiary, tokens);
-        emit TokensPurchased(msg.sender, beneficiary, weiAmount, tokens);
-        vault.deposit.value(weiAmount);
+    function() external payable  {
+        mint(msg.sender, msg.value);
     }
 
-    /**
-    * @notice Set the Token Manager to `_tokenManager`.
-    * @param _tokenManager The new token manager address
-    */
+    function mint(address to, uint256 value) public payable {
+        require(tokensSold.add(value) < cap, ERROR_EXCEEDED_HARDCAP);
+        require(isOpen == true, ERROR_SALE_CLOSED);
+
+        uint256 amount = rate.mul(value);
+        tokensSold = tokensSold.add(amount);
+        tokenManager.mint(to, amount);
+        agent.deposit.value(value)(ETH, value);
+        emit TokensPurchased(to, value, amount);
+
+    }
+
+
+    function openSale(uint256 _rate, uint256 _cap) external auth(OPEN_SALE_ROLE) {
+        require(isOpen == false, ERROR_SALE_OPEN);
+
+        rate = _rate;
+        cap = _cap;
+        tokensSold = 0;
+        isOpen = true;
+        emit SaleOpen(rate, cap);
+    }
+
+
+    function closeSale() external auth(CLOSE_SALE_ROLE) {
+        require(isOpen == true, ERROR_SALE_CLOSED);
+
+        isOpen = false;
+        emit SaleClosed(tokensSold);
+    }
+
     function setTokenManager(address _tokenManager) external auth(SET_TOKEN_MANAGER_ROLE) {
         require(isContract(_tokenManager), ERROR_ADDRESS_NOT_CONTRACT);
+        require(isOpen == false, ERROR_SALE_OPEN);
 
         tokenManager = TokenManager(_tokenManager);
         emit SetTokenManager(_tokenManager);
     }
 
-    /**
-    * @notice Set the Vault to `_vault`.
-    * @param _vault The new vault address
-    */
-    function setVault(address _vault) external auth(SET_VAULT_ROLE) {
-        require(isContract(_vault), ERROR_ADDRESS_NOT_CONTRACT);
+    function setAgent(address _agent) external auth(SET_AGENT_ROLE) {
+        require(isContract(_agent), ERROR_ADDRESS_NOT_CONTRACT);
 
-        vault = Vault(_vault);
-        emit SetVault(_vault);
-    }
-
-    /**
-    * @dev Convenience function for getting the Minted Token in a radspec string
-    */
-    function getToken() public view returns (address) {
-        return tokenManager.token();
+        agent = Agent(_agent);
+        emit SetAgent(_agent);
     }
 }

@@ -1,13 +1,23 @@
 {
   "roles": [
     {
-      "name": "Set Vault role",
-      "id": "SET_VAULT_ROLE",
+      "name": "Open Sale Role",
+      "id": "OPEN_SALE_ROLE",
+      "params": []
+    },
+    {
+      "name": "Close Sale Role",
+      "id": "CLOSE_SALE_ROLE",
       "params": []
     },
     {
       "name": "Set Token Manager Role",
       "id": "SET_TOKEN_MANAGER_ROLE",
+      "params": []
+    },
+    {
+      "name": "Set Agent Role",
+      "id": "SET_AGENT_ROLE",
       "params": []
     }
   ],
@@ -18,20 +28,20 @@
     },
     "rinkeby": {
       "registry": "0x98df287b6c145399aaa709692c8d308357bc085d",
-      "appName": "token-sale.aragonpm.eth",
+      "appName": "tokensale.open.aragonpm.eth",
       "network": "rinkeby"
     },
     "staging": {
       "registry": "0xfe03625ea880a8cba336f9b5ad6e15b0a3b5a939",
-      "appName": "token-sale.aragonpm.eth",
+      "appName": "tokensale.open.aragonpm.eth",
       "network": "rinkeby"
     },
     "mainnet": {
       "registry": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-      "appName": "token-sale.aragonpm.eth",
+      "appName": "tokennsale.open.aragonpm.eth",
       "network": "mainnet"
     }
   },
-  "appName": "tokensale.aragonpm.eth",
+  "appName": "token-sale.open.aragonpm.eth",
   "path": "contracts/TokenSale.sol"
 }

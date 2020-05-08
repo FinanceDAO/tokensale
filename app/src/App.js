@@ -1,53 +1,118 @@
-// App.js
-import React, { useState }from 'react'
+import React from 'react'
+import { useViewport } from 'use-viewport'
 import { useAragonApi } from '@aragon/api-react'
-import { Main, Header, Button, IconPlus, Tag, TextInput } from '@aragon/ui'
+import {
+  Box,
+  Button,
+  ContextMenu,
+  ContextMenuItem,
+  DataView,
+  GU,
+  Header,
+  IconUnlock,
+  IconLock,
+  IconTrash,
+  IdentityBadge,
+  Main,
+  SyncIndicator,
+  Tag,
+  textStyle,
+  useTheme,
+} from '@aragon/ui'
 
 function App() {
   const { api, appState } = useAragonApi()
-  const { tokenManager, isSyncing } = appState
-  const [amount, setAmount] = useState('')
+
+  const { count, isSyncing } = appState
+
+  const theme = useTheme()
+  const { below } = useViewport()
+
+  const compactMode = below('medium')
+
   return (
     <Main>
+      {isSyncing && <SyncIndicator />}
       <Header
         primary={
-          <>
-            Token Sale   
-            <Tag mode="identifier">TKN</Tag>
-          </>
+          <div
+            css={`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            `}
+          >
+            <div
+              css={`
+                ${textStyle('title2')}
+              `}
+            >
+              Token Sale
+            </div>
+            <Tag
+              mode="identifier"
+              label="TKN"
+              css={`
+                margin-left: ${1 * GU}px;
+                margin-top: ${0.5 * GU}px;
+              `}
+            />
+          </div>
         }
         secondary={
-          <Button mode="strong" label="Buy tokens" icon={<IconPlus />} />
+          <>
+            <Button
+              mode="strong"
+              label="Open Sale"
+              icon={<IconUnlock />}
+              display={compactMode ? 'icon' : 'all'}
+              onClick={() => api.increment(1).toPromise()}
+              css={`
+                margin-right: ${1 * GU}px;
+              `}
+            />
+            <Button
+              mode="strong"
+              label="Close Sale"
+              icon={<IconLock />}
+              onClick={() => api.decrement(1).toPromise()}
+              display={compactMode ? 'icon' : 'all'}
+            />
+          </>
         }
       />
-      <div>
-        Token Manager: {amount}
-      </ div>
-      <div>
-        Vault: {amount}
-      </div>
-      <div>
-        Rate: {amount}
-      </div>
-      <div>
-        Hard Cap: {amount}
-      </div>
-      <div>
-        Tokens Remaining: {amount}
-      </div>
-      <div>
-        WEI Raised: {amount}
-      </div>
-      <div>
-        ETH: {amount}
-      </div>
-      <div>
-        TKN: {amount}
-      </div>
-      <TextInput
-        value={amount}
-        onChange={event => {
-          setAmount(event.target.value)
+      <DataView
+        fields={['Beneficiary', 'Rate']}
+        entries={[
+          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+        ]}
+        renderEntry={({ account, rate }) => {
+          return [
+            <IdentityBadge entity={account} />,
+            <div
+              css={`
+                ${textStyle('body2')}
+              `}
+            >
+              {rate}%
+            </div>,
+          ]
+        }}
+        renderEntryActions={({ account, rate }, index) => {
+          return (
+            <ContextMenu>
+              <ContextMenuItem
+                onClick={() => api.decrement(1).toPromise()}
+                css={`
+                  color: ${theme.negative};
+                `}
+              >
+                <IconTrash /> Remove policy
+              </ContextMenuItem>
+            </ContextMenu>
+          )
         }}
       />
     </Main>
