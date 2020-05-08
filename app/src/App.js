@@ -9,8 +9,8 @@ import {
   DataView,
   GU,
   Header,
-  IconAdd,
-  IconEnter,
+  IconUnlock,
+  IconLock,
   IconTrash,
   IdentityBadge,
   Main,
@@ -47,11 +47,11 @@ function App() {
                 ${textStyle('title2')}
               `}
             >
-              Issuance
+              Token Sale
             </div>
             <Tag
               mode="identifier"
-              label="IST"
+              label="TKN"
               css={`
                 margin-left: ${1 * GU}px;
                 margin-top: ${0.5 * GU}px;
@@ -63,8 +63,8 @@ function App() {
           <>
             <Button
               mode="strong"
-              label="Execute policies"
-              icon={<IconEnter />}
+              label="Open Sale"
+              icon={<IconUnlock />}
               display={compactMode ? 'icon' : 'all'}
               onClick={() => api.increment(1).toPromise()}
               css={`
@@ -73,8 +73,8 @@ function App() {
             />
             <Button
               mode="strong"
-              label="New policy"
-              icon={<IconAdd />}
+              label="Close Sale"
+              icon={<IconLock />}
               onClick={() => api.decrement(1).toPromise()}
               display={compactMode ? 'icon' : 'all'}
             />
