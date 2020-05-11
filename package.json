@@ -18,9 +18,10 @@
   },
   "dependencies": {
     "@aragon/abis": "^1.1.0",
+    "@aragon/apps-agent": "^2.1.0",
     "@aragon/apps-shared-migrations": "^1.0.0",
     "@aragon/apps-token-manager": "^2.1.0",
-    "@aragon/apps-agent": "^2.1.0",
+    "@aragon/truffle-config-v5": "^1.0.1",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.47"
   },
