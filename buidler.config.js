@@ -28,7 +28,7 @@ module.exports = {
   },
   // Etherscan plugin configuration. Learn more at https://github.com/nomiclabs/buidler/tree/master/packages/buidler-etherscan
   etherscan: {
-    apiKey: '', // API Key for smart contract verification. Get yours at https://etherscan.io/apis
+    apiKey: secret.etherscan, // API Key for smart contract verification. Get yours at https://etherscan.io/apis
   },
   // Aragon plugin configuration
   aragon: {
