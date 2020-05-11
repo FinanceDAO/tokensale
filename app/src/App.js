@@ -3,6 +3,8 @@ import { useViewport } from 'use-viewport'
 import { useAragonApi } from '@aragon/api-react'
 import {
   Box,
+  TokenInfoBoxRow,
+  Split,
   Button,
   ContextMenu,
   ContextMenuItem,
@@ -81,40 +83,49 @@ function App() {
           </>
         }
       />
-      <DataView
-        fields={['Beneficiary', 'Rate']}
-        entries={[
-          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
-          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
-          { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
-        ]}
-        renderEntry={({ account, rate }) => {
-          return [
-            <IdentityBadge entity={account} />,
-            <div
-              css={`
-                ${textStyle('body2')}
-              `}
-            >
-              {rate}%
-            </div>,
-          ]
-        }}
-        renderEntryActions={({ account, rate }, index) => {
-          return (
-            <ContextMenu>
-              <ContextMenuItem
-                onClick={() => api.decrement(1).toPromise()}
+      <Split
+        primary={<DataView
+          fields={['Beneficiary', 'Rate']}
+          entries={[
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+          ]}
+          renderEntry={({ account, rate }) => {
+            return [
+              <IdentityBadge entity={account} />,
+              <div
                 css={`
-                  color: ${theme.negative};
+                  ${textStyle('body2')}
                 `}
               >
-                <IconTrash /> Remove policy
-              </ContextMenuItem>
-            </ContextMenu>
-          )
-        }}
+                {rate}%
+              </div>,
+            ]
+          }}
+          renderEntryActions={({ account, rate }, index) => {
+            return (
+              <ContextMenu>
+                <ContextMenuItem
+                  onClick={() => api.decrement(1).toPromise()}
+                  css={`
+                    color: ${theme.negative};
+                  `}
+                >
+                  <IconTrash /> Remove policy
+                </ContextMenuItem>
+              </ContextMenu>
+            )
+          }}
+        />}
+        secondary={
+          <>
+            <Box heading="Token info">
+            </Box>
+          </>
+        }
       />
+      
     </Main>
   )
 }

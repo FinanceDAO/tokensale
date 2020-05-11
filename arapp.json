@@ -42,6 +42,6 @@
       "network": "mainnet"
     }
   },
-  "appName": "token-sale.open.aragonpm.eth",
+  "appName": "tokensale.open.aragonpm.eth",
   "path": "contracts/TokenSale.sol"
 }

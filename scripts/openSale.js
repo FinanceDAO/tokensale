@@ -8,9 +8,13 @@ const main = async () => {
     const TOKENSALE_CONTRACT = '0x8f1cf28dcd72f5cf75091e61bf99f7ac2edb9dac'
     const provider = new ethers.providers.JsonRpcProvider(url);
     let wallet = new ethers.Wallet(privateKey, provider)
+
     wallet = wallet.connect(provider)
 
+
     let abi = [
+        'function openSale(uint256 _rate, uint256 _cap) external',
+        'function closeSale() external',
         'function isOpen() public view returns (bool)',
         'function rate() public view returns (uint256)',
         'function tokensSold() public view returns (uint256)',
@@ -18,12 +22,28 @@ const main = async () => {
 
     ]
 
+    const bigExp = (x, y) =>
+        ethers.utils
+            .bigNumberify(x)
+            .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(y)))
+    pct18 = (x) => bigExp(x, 18)
+
     let sale = new ethers.Contract(TOKENSALE_CONTRACT, abi, wallet)
-    let open = await sale.isOpen()
-    console.log(`sale open:    ${open}`)
-    console.log('tokens sold: ', + BigNumber(await sale.tokensSold()).toString())
-    console.log('tokens cap:  ', + BigNumber(await sale.cap()).toString())
-    console.log('tokens rate: ', + BigNumber(await sale.rate()).toString())
+    var openSale = sale.openSale(1, pct18(50));
+
+    openSale.then(function(transaction) {
+        // The transaction has been delivered to the network (but not mined)
+        console.log('Open Sale!');
+        console.log(transaction);
+        
+    }).catch(function(error) {
+        if (error.message === 'cancelled') {
+            console.log('Transaction was declined by the user');
+        } else {
+            console.log('Unknown Error');
+            console.log(error);
+        }
+    });
 }
 
 main()
