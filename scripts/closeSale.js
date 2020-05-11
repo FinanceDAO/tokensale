@@ -31,9 +31,9 @@ const main = async () => {
 
     let sale = new ethers.Contract(TOKENSALE_CONTRACT, abi, wallet)
 
-    var openSale = sale.closeSale();
+    var closeSale = sale.closeSale();
 
-    openSale.then(function(transaction) {
+    closeSale.then(function(transaction) {
         // The transaction has been delivered to the network (but not mined)
         console.log('Close Sale!');
         console.log(transaction);

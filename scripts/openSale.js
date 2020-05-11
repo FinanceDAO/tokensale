@@ -19,7 +19,6 @@ const main = async () => {
         'function rate() public view returns (uint256)',
         'function tokensSold() public view returns (uint256)',
         'function cap() public view returns (uint256)'
-
     ]
 
     const bigExp = (x, y) =>

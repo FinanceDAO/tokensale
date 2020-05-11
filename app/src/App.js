@@ -85,11 +85,14 @@ function App() {
       />
       <Split
         primary={<DataView
-          fields={['Beneficiary', 'Rate']}
+          fields={['Beneficiary', 'Sold']}
           entries={[
-            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
-            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
-            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '5' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '50000' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1400' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '20' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1000' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1500' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1' },
           ]}
           renderEntry={({ account, rate }) => {
             return [
@@ -99,28 +102,14 @@ function App() {
                   ${textStyle('body2')}
                 `}
               >
-                {rate}%
+                {rate}
               </div>,
             ]
-          }}
-          renderEntryActions={({ account, rate }, index) => {
-            return (
-              <ContextMenu>
-                <ContextMenuItem
-                  onClick={() => api.decrement(1).toPromise()}
-                  css={`
-                    color: ${theme.negative};
-                  `}
-                >
-                  <IconTrash /> Remove policy
-                </ContextMenuItem>
-              </ContextMenu>
-            )
           }}
         />}
         secondary={
           <>
-            <Box heading="Token info">
+            <Box heading="Sale Metrics">
             </Box>
           </>
         }
