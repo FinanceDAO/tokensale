@@ -17,6 +17,7 @@ import {
   GU,
   Header,
   IconUnlock,
+  IconFundraising,
   IconLock,
   IconTrash,
   IdentityBadge,
@@ -70,20 +71,13 @@ function App() {
           <>
             <Button
               mode="strong"
-              label="Open Sale"
-              icon={<IconUnlock />}
+              label="Buy Tokens"
+              icon={<IconFundraising />}
               display={compactMode ? 'icon' : 'all'}
               onClick={() => api.increment(1).toPromise()}
               css={`
                 margin-right: ${1 * GU}px;
               `}
-            />
-            <Button
-              mode="strong"
-              label="Close Sale"
-              icon={<IconLock />}
-              onClick={() => api.decrement(1).toPromise()}
-              display={compactMode ? 'icon' : 'all'}
             />
           </>
         }
@@ -101,8 +95,10 @@ function App() {
           entries={[
             { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '50000' },
             { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1400' },
-            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '20' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '200' },
             { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1000' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1500' },
+            { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '3000' },
             { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1500' },
             { account: '0x5790dB5E4D9e868BB86F5280926b9838758234DD', rate: '1' },
           ]}
