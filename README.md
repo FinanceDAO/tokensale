@@ -7,7 +7,7 @@
 
 ## Developer quick start 👩‍💻
 
-`yarn start` will install spin up the app in a DAO on the devchan, with hot reloading.
+`yarn start` will install spin up the app in a DAO on the devchan with hot reloading.
 
 There are a few other scripts provided:
 
@@ -15,7 +15,7 @@ There are a few other scripts provided:
 - `state`: displays the state of the tokensale contract in the cli
 - `openSale`: opens the tokensale
 - `closeSale`: closes the tokensale
-- `buyTokens`: buys one eth of tokens from account[0]
+- `buyTokens`: buys one eth of tokens from `account[0]`
 
 
 ### Libraries
